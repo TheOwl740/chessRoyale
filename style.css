@@ -1,0 +1,27 @@
+sup {
+  margin-left: 2px;
+}
+p {
+  margin: 0;
+}
+.right {
+  float: right;
+  margin: 0 5px 0 0;
+}
+.left {
+  float: left;
+  margin: 0 0 0 5px;
+}
+.derivativeComponentBox {
+  height: 20px;
+}
+.add {
+  background-color: #3486eb;
+  border: 2px solid #135fbd;
+  border-radius: 4px;
+}
+.clear {
+  background-color: #ff2929;
+  border: 2px solid #bd1313;
+  border-radius: 4px;
+}
