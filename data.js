@@ -6,6 +6,7 @@ var accountState = "";
 var difficulty = 1000;
 var selectedCard = 0;
 var bd = 0;
+var placing = null;
 
 var placing = {
 };
@@ -70,19 +71,15 @@ class card {
     this.selected = false;
     switch(type) {
       case "003":
-        this.sprite = 1;
         this.cost = 9;
         break;
       case "001":
-        this.sprite = 2;
         this.cost = 3;
         break;
       case "002":
-        this.sprite = 3;
         this.cost = 5;
         break;
       case "000":
-        this.sprite = 5;
         this.cost = 1;
         break;
     }
@@ -92,6 +89,8 @@ class card {
     if(this.available) {
       if(this.selected) {
         canvas.image(assets.images.cards[parseInt(this.type)], 1, ssc * 10.5, ((canvas.h / 6) * position) + (canvas.h / 12), canvas.h / 8, canvas.h / 6, 0, 0, 0, false, false);
+				placing = new piece(this.type, "white");
+				placing.update();
       } else {
         canvas.image(assets.images.cards[parseInt(this.type)], 1, ssc * 11, ((canvas.h / 6) * position) + (canvas.h / 12), canvas.h / 8, canvas.h / 6, 0, 0, 0, false, false);
       }
@@ -106,23 +105,35 @@ class card {
 }
 
 class piece {
-  constructor(type, assigned, color) {
+  constructor(type, color) {
     this.type = type;
-    this.assigned = assigned;
     this.color = color;
+		if(color === "white") {
+			this.row = 1;
+		} else {
+			this.row = 0;
+		}
     switch(type) {
-      
-    }
-    if(!assigned) {
-
+			case "000":
+				this.col = 5;
+				break;
+			case "001":
+				this.col = 2;
+				break;
+			case "002":
+				this.col = 3;
+				break;
+			case "003":
+				this.col = 1;
+				break;
     }
   }
   
-  update() {
-    if(this.assigned) {
+  update(assigned) {
+    if(assigned) {
       
     } else {
-      if(color === "white") {
+      if(this.color === "white") {
         this.y = (ssc * 10) + (ssc / 2);
         this.x = (ssc * 8) + (ssc / 2);
         if(input.getKey("ArrowLeft") && bd > 100) {
@@ -142,7 +153,7 @@ class piece {
           }
         }
       }
-      canvas.drawSprite(pieceSheet, 1, column, row, x, y, w, h, r, xOffset, yOffset)
+      canvas.drawSprite(assets.sprites.pieceSheet, 1, this.col, this.row, this.x, this.y, ssc, ssc, 0, 0, 0);
     }
   }
 }
