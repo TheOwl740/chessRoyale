@@ -134,3 +134,31 @@ function placementUpdate() {
   }
   white.deck[selectedCard].selected = true;
 }
+
+function getSpace(x, y) {
+	for(a = 0; a < white.pieces.length; a++) {
+		if(white.pieces[a].board.x === x && white.pieces[a].board.y === y) {
+			return "WP"
+			break;
+		}
+	}
+	for(a = 0; a < black.pieces.length; a++) {
+		if(black.pieces[a].board.x === x && black.pieces[a].board.y === y) {
+			return "BP"
+			break;
+		}
+	}
+	for(a = 0; a < white.towers.length; a++) {
+		if(white.towers[a].board.x === x && white.towers[a].board.y === y) {
+			return "WT"
+			break;
+		}
+	}
+	for(a = 0; a < black.towers.length; a++) {
+		if(black.towers[a].board.x === x && black.towers[a].board.y === y) {
+			return "BT"
+			break;
+		}
+	}
+	return "OP"
+}

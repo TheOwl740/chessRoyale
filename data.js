@@ -39,9 +39,14 @@ class king {
     this.health = 400 + Math.floor(elo / 10);
     this.x = (x * ssc) + (ssc / 2);
     this.y = (y * ssc) + (ssc / 2);
+		this.board;
     this.color = color;
   }
   update() {
+		this.board = {
+			x: Math.round((this.x / ssc) - 0.5),
+			y: Math.round((this.y / ssc) - 0.5)
+		}
     canvas.drawSprite(assets.sprites.pieceSheet, 1, 0, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
     canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
   }
@@ -52,9 +57,14 @@ class rook {
     this.health = 200 + Math.floor(elo / 20);
     this.x = (x * ssc) + (ssc / 2);
     this.y = (y * ssc) + (ssc / 2);
+		this.board;
     this.color = color;
   }
   update() {
+		this.board = {
+			x: Math.round((this.x / ssc) - 0.5),
+			y: Math.round((this.y / ssc) - 0.5)
+		}
     canvas.drawSprite(assets.sprites.pieceSheet, 1, 4, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
     canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
   }
@@ -111,10 +121,7 @@ class piece {
   constructor(type, color) {
 		this.y = (ssc * 10) + (ssc / 2);
     this.x = (ssc * 8) + (ssc / 2);
-		this.board = {
-			x: 10,
-			y: 8
-		}
+		this.board;
     this.type = type;
     this.color = color;
 		if(color === "white") {
@@ -140,8 +147,8 @@ class piece {
   
   update(assigned) {
 		this.board = {
-			x: (this.x / ssc) - 0.5,
-			y: (this.y / ssc) - 0.5
+			x: Math.round((this.x / ssc) - 0.5),
+			y: Math.round((this.y / ssc) - 0.5)
 		}
     if(assigned) {
       
