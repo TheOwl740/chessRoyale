@@ -5,11 +5,11 @@ if(window.localStorage.getItem('elo') === null) {
   accountState = "(Created new user)";
 } else {
   elo = window.localStorage.getItem('elo');
-  for(i = 0; i < window.localStorage.getItem('deck').length; i += 3) {
-    deck.push(window.localStorage.getItem('deck').substr(i, 3));
+  for(f = 0; f < window.localStorage.getItem('deck').length; f += 3) {
+    deck.push(window.localStorage.getItem('deck').substr(f, 3));
   }
-  for(i = 0; i < window.localStorage.getItem('collection').length; i += 3) {
-    collection.push(window.localStorage.getItem('collection').substr(i, 3));
+  for(f = 0; f < window.localStorage.getItem('collection').length; f += 3) {
+    collection.push(window.localStorage.getItem('collection').substr(f, 3));
   }
   accountState = "User data loaded!";
 }
@@ -20,14 +20,20 @@ function update() {
   if(inGame) {
     drawBoard();
     manageAdvantage();
-    for(i = 0; i < white.towers.length; i++) {
-      white.towers[i].update();
+    for(g = 0; g < white.towers.length; g++) {
+      white.towers[g].update();
     }
-    for(i = 0; i < black.towers.length; i++) {
-      black.towers[i].update();
+    for(g = 0; g < black.towers.length; g++) {
+      black.towers[g].update();
     }
-    for(i = 0; i < white.deck.length; i++) {
-      white.deck[i].update(i);
+		for(g = 0; g < white.pieces.length; g++) {
+      white.pieces[g].update();
+    }
+		for(g = 0; g < black.pieces.length; g++) {
+      black.pieces[g].update();
+    }
+    for(g = 0; g < white.deck.length; g++) {
+      white.deck[g].update(g);
     }
     placementUpdate();
   } else {

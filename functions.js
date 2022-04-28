@@ -1,4 +1,4 @@
-function initialiseGame(level, aiLevel, mode) {
+function initialiseGame(mode) {
   white = {
     advantage: 0,
     towers: [
@@ -20,21 +20,21 @@ function initialiseGame(level, aiLevel, mode) {
   switch(mode) {
     default:
       white.towers.push(new king(elo, 4, 10, 0));
-      white.towers.push(new rook(elo, 1, 9, 0));
-      white.towers.push(new rook(elo, 7, 9, 0));
+      white.towers.push(new rook(elo, 1, 10, 0));
+      white.towers.push(new rook(elo, 7, 10, 0));
       
       black.towers.push(new king(difficulty, 4, 0, 1));
-      black.towers.push(new rook(difficulty, 1, 1, 1));
-      black.towers.push(new rook(difficulty, 7, 1, 1));
+      black.towers.push(new rook(difficulty, 1, 0, 1));
+      black.towers.push(new rook(difficulty, 7, 0, 1));
   }
-  for(i = 0; i < deck.length; i++) {
-    white.deck.push(new card(deck[i]));
+  for(c = 0; c < deck.length; c++) {
+    white.deck.push(new card(deck[c]));
   }
 }
 
 function updateMenu() {
-  canvas.clear("#112233");
-    
+	canvas.image(assets.images.background, 1, canvas.w / 2, canvas.h / 2, canvas.w, canvas.h * 1.2, 0, 0, 0, false, false);
+  
   switch(Math.floor(elo / 200)) {
     case 5:
       playerLevel = "noob";
@@ -69,7 +69,7 @@ function updateMenu() {
   canvas.image(assets.images.button, 1, 230, (canvas.h / 2) + 60, 400, 150, 0, 0, 0, false, false);
   canvas.text("black", "courier", "Play", 1, 110, (canvas.h / 2) + 80, 100, 0, 0, 0);
   if(math.colliding(input.mouse.x, input.mouse.y, 1, 1, 230, (canvas.h / 2) + 60, 400, 150) && input.mouse.clicking) {
-    initialiseGame();
+    initialiseGame("normal");
     inGame = true;
   }
   
@@ -82,20 +82,19 @@ function updateMenu() {
     difficulty--;
   }
   
-  canvas.rect("#001133", 1, (canvas.w / 2) + 20, canvas.h / 2, canvas.h / 6, canvas.h, 0, 0, 0);
-  for(i = 0; i < 6; i++) {
-    canvas.image(assets.images.cards[parseInt(deck[i], 10)], 1, (canvas.w / 2) + 20, ((canvas.h / 6) * i) + (canvas.h / 12), canvas.h / 8, canvas.h / 6, 0, 0, 0, false, false);
+  for(d = 0; d < 6; d++) {
+    canvas.image(assets.images.cards[parseInt(deck[d], 10)], 1, (canvas.w / 2) + 20, ((canvas.h / 6) * d) + (canvas.h / 12), canvas.h / 8, canvas.h / 6, 0, 0, 0, false, false);
   }
   
   canvas.text("black", "courier", "Collection", 1, (canvas.w * 2) / 3, 40, 50, 0, 0, 0);
   
-  for(i = 0; i < collection.length; i++) {
-    canvas.image(assets.images.cards[parseInt(collection[i], 10)], 1, (canvas.w / 2) + (canvas.w / 7) + ((canvas.w / 20) * (i % 6)), 100 + ((canvas.w / 18) * Math.floor(i / 6)), canvas.w / 24, canvas.w / 20, 0, 0, 0, false, false);
+  for(d = 0; d < collection.length; d++) {
+    canvas.image(assets.images.cards[parseInt(collection[d], 10)], 1, (canvas.w / 2) + (canvas.w / 7) + ((canvas.w / 20) * (d % 6)), 100 + ((canvas.w / 18) * Math.floor(d / 6)), canvas.w / 24, canvas.w / 20, 0, 0, 0, false, false);
   }
 }
 
 function drawBoard() {
-  canvas.clear("#112233");
+	canvas.image(assets.images.background, 1, canvas.w / 2, canvas.h / 2, canvas.w, canvas.h * 1.2, 0, 0, 0, false, false);
   canvas.image(assets.images.board, 1, canvas.h / 2.444, canvas.h / 2, canvas.h / 1.222, canvas.h, 0, 0, 0, false, false);
 }
 
@@ -129,36 +128,45 @@ function placementUpdate() {
       selectedCard = 0;
     }
   }
-  for(i = 0; i < white.deck.length; i++) {
-    white.deck[i].selected = false;
+  for(e = 0; e < white.deck.length; e++) {
+    white.deck[e].selected = false;
   }
   white.deck[selectedCard].selected = true;
 }
 
 function getSpace(x, y) {
 	for(a = 0; a < white.pieces.length; a++) {
-		if(white.pieces[a].board.x === x && white.pieces[a].board.y === y) {
+		if(convert(white.pieces[a].x) === x && convert(white.pieces[a].y) === y) {
 			return "WP"
-			break;
 		}
 	}
 	for(a = 0; a < black.pieces.length; a++) {
-		if(black.pieces[a].board.x === x && black.pieces[a].board.y === y) {
+		if(convert(black.pieces[a].x) === x && convert(black.pieces[a].y) === y) {
 			return "BP"
-			break;
 		}
 	}
 	for(a = 0; a < white.towers.length; a++) {
-		if(white.towers[a].board.x === x && white.towers[a].board.y === y) {
+		if(convert(white.towers[a].x) === x && convert(white.towers[a].y) === y) {
 			return "WT"
-			break;
 		}
 	}
 	for(a = 0; a < black.towers.length; a++) {
-		if(black.towers[a].board.x === x && black.towers[a].board.y === y) {
+		if(convert(black.towers[a].x) === x && convert(black.towers[a].y) === y) {
 			return "BT"
-			break;
 		}
 	}
 	return "OP"
+}
+
+function convert(number) {
+	return Math.round((number / ssc) - 0.5);
+}
+
+function backOpen() {
+	for(i = 0; i < 8; i++) {
+		if(getSpace(i, 10) === "WP") {
+			return false;
+		}
+	}
+	return true;
 }
