@@ -133,6 +133,4 @@ function placementUpdate() {
     white.deck[i].selected = false;
   }
   white.deck[selectedCard].selected = true;
-  placing = new piece(white.deck[selectedCard], false);
-  placing.update();
 }
