@@ -111,6 +111,10 @@ class piece {
   constructor(type, color) {
 		this.y = (ssc * 10) + (ssc / 2);
     this.x = (ssc * 8) + (ssc / 2);
+		this.board = {
+			x: 10,
+			y: 8
+		}
     this.type = type;
     this.color = color;
 		if(color === "white") {
@@ -135,6 +139,10 @@ class piece {
   }
   
   update(assigned) {
+		this.board = {
+			x: (this.x / ssc) - 0.5,
+			y: (this.y / ssc) - 0.5
+		}
     if(assigned) {
       
     } else {
