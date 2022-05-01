@@ -19,13 +19,13 @@ function initialiseGame(mode) {
   };
   switch(mode) {
     default:
-      white.towers.push(new king(elo, 4, 10, 0));
-      white.towers.push(new rook(elo, 1, 10, 0));
-      white.towers.push(new rook(elo, 7, 10, 0));
+      white.towers.push(new tower(elo, 4, 10, 0, "king"));
+      white.towers.push(new tower(elo, 1, 10, 0, "rook"));
+      white.towers.push(new tower(elo, 7, 10, 0, "rook"));
       
-      black.towers.push(new king(difficulty, 4, 0, 1));
-      black.towers.push(new rook(difficulty, 1, 0, 1));
-      black.towers.push(new rook(difficulty, 7, 0, 1));
+      black.towers.push(new tower(difficulty, 4, 0, 1, "king"));
+      black.towers.push(new tower(difficulty, 1, 0, 1, "rook"));
+      black.towers.push(new tower(difficulty, 7, 0, 1, "rook"));
   }
   for(c = 0; c < deck.length; c++) {
     white.deck.push(new card(deck[c]));
@@ -163,7 +163,7 @@ function convert(number) {
 }
 
 function backOpen() {
-	for(i = 0; i < 8; i++) {
+	for(i = 0; i < 9; i++) {
 		if(getSpace(i, 10) === "WP") {
 			return false;
 		}

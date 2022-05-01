@@ -45,29 +45,26 @@ const assets = {
   }
 };
 
-class king {
-  constructor(elo, x, y, color) {
-    this.health = 400 + Math.floor(elo / 10);
+class tower {
+  constructor(elo, x, y, color, type) {
+		if(this.type === "king") {
+		  this.health = 400 + Math.floor(elo / 10);
+		} else {
+    	this.health = 200 + Math.floor(elo / 20);
+		}
     this.x = (x * ssc) + (ssc / 2);
     this.y = (y * ssc) + (ssc / 2);
     this.color = color;
+		this.type = type;
   }
   update() {
-    canvas.drawSprite(assets.sprites.pieceSheet, 1, 0, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
-    canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
-  }
-}
-
-class rook {
-  constructor(elo, x, y, color) {
-    this.health = 200 + Math.floor(elo / 20);
-    this.x = (x * ssc) + (ssc / 2);
-    this.y = (y * ssc) + (ssc / 2);
-    this.color = color;
-  }
-  update() {
-    canvas.drawSprite(assets.sprites.pieceSheet, 1, 4, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
-    canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
+		if(this.type === "king") {
+			canvas.drawSprite(assets.sprites.pieceSheet, 1, 0, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
+    	canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
+		} else {
+			canvas.drawSprite(assets.sprites.pieceSheet, 1, 4, this.color, this.x, this.y, ssc, ssc, 0, 0, 0);
+    	canvas.text("black", "courier", this.health, 1, this.x + (ssc / 6), this.y + (ssc / 2), 12, 0, 0, 0);
+		}
   }
 }
 
@@ -99,19 +96,21 @@ class card {
         canvas.image(assets.images.cards[parseInt(this.pieceType)], 1, ssc * 10.5, ((canvas.h / 6) * position) + (canvas.h / 12), canvas.h / 8, canvas.h / 6, 0, 0, 0, false, false);
 				if(backOpen()) {
 					if(placing === null) {
-						placing = new piece(this.pieceType, "white");
+						placing = new piece(this.pieceType, "white", 8, 10, false);
 					}
 					if(placing.type === this.pieceType) {
 						placing.update();
 					} else {	
-						placing = new piece(this.pieceType, "white");
+						placing = new piece(this.pieceType, "white", 8, 10, false);
 					}
 					if(input.getKey("Enter") && bd > 15) {
 						if(white.advantage > this.cost) {
 							bd = 0;
 							white.advantage -= this.cost;
+							placing.assigned = true;
 							white.pieces.push(placing);
 							placing = null;
+							this.available = false;
 						}
 					}
 				}
@@ -129,11 +128,13 @@ class card {
 }
 
 class piece {
-  constructor(type, color) {
-		this.y = (ssc * 10) + (ssc / 2);
-    this.x = (ssc * 8) + (ssc / 2);
-    this.type = type;
+  constructor(type, color, x, y, assigned) {
+		this.x = (x * ssc) + (ssc / 2);
+    this.y = (y * ssc) + (ssc / 2);
     this.color = color;
+		this.type = type;
+		this.assigned = assigned;
+		this.moveTimer = 0;
 		if(color === "white") {
 			this.row = 0;
 		} else {
@@ -155,10 +156,15 @@ class piece {
     }
   }
   
-  update(assigned) {
-    if(assigned) {
-      
-    } else {
+  update() {
+    if(this.assigned) {
+      canvas.drawSprite(assets.sprites.pieceSheet, 1, this.col, this.row, this.x, this.y, ssc, ssc, 0, 0, 0);
+    	if(this.moveTimer > 0) {
+				this.moveTimer -= elo / 500
+			} else {
+				this.moveTimer = 0;
+			}
+		} else {
       if(this.color === "white") {
         if(input.getKey("ArrowLeft") && bd > 15) {
           bd = 0;
