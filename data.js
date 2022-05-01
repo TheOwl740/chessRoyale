@@ -160,10 +160,12 @@ class piece {
     if(this.assigned) {
       canvas.drawSprite(assets.sprites.pieceSheet, 1, this.col, this.row, this.x, this.y, ssc, ssc, 0, 0, 0);
     	if(this.moveTimer > 0) {
-				this.moveTimer -= elo / 500
+				this.moveTimer -= elo / 1000;
+				canvas.arc("#6495ED", 0.69, this.x, this.y, (ssc / 2) - 10, -25, this.moveTimer - 25, 10, false);
 			} else {
 				this.moveTimer = 0;
 			}
+			canvas.arc()
 		} else {
       if(this.color === "white") {
         if(input.getKey("ArrowLeft") && bd > 15) {

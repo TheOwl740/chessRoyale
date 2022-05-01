@@ -33,14 +33,22 @@ canvas.setDimensions = (w, h) => {
   }
 };
 
-//Draws a filled rectangle
-canvas.rect = (color, alpha, x, y, w, h, angle, xOffset, yOffset) => {
+//Draws a rectangle
+canvas.rect = (color, alpha, x, y, w, h, angle, xOffset, yOffset, lw, filled) => {
+	canvas.cx.beginPath();
   canvas.cx.globalAlpha = alpha;
   canvas.cx.save();
   canvas.cx.translate(x, y);
   canvas.cx.rotate(angle * (Math.PI/180));
-  canvas.cx.fillStyle = color;
-  canvas.cx.fillRect(xOffset - (w / 2), yOffset - (h / 2), w, h);
+  canvas.cx.lineWidth = lw;
+  if(filled) {
+  	canvas.cx.fillStyle = color;
+  	canvas.cx.fillRect(xOffset - (w / 2), yOffset - (h / 2), w, h);
+  } else {
+  	canvas.cx.strokeStyle = color;
+  	canvas.cx.rect(xOffset - (w / 2), yOffset - (h / 2), w, h)
+    canvas.cx.stroke();
+  }
   canvas.cx.restore();
 };
 
@@ -77,14 +85,16 @@ canvas.image = (source, alpha, x, y, w, h, angle, xOffset, yOffset, hFlip, vFlip
   canvas.cx.restore();
 };
 
-//Draws a filled circle
-canvas.arc = (color, alpha, x, y, radius) => {
+//Draws an arc
+canvas.arc = (color, alpha, x, y, radius, start, end, lw, filled) => {
   canvas.cx.globalAlpha = alpha;
   canvas.cx.beginPath();
-  canvas.cx.arc(x, y, radius, 0, 2 * Math.PI, false);
-  canvas.cx.fillStyle = color;
-  canvas.cx.fill();
-  canvas.cx.lineWidth = 5;
+  canvas.cx.lineWidth = lw;
+  canvas.cx.arc(x, y, radius, (start / 50) * Math.PI, (end / 50) * Math.PI, false);
+  if(filled) {
+  	canvas.cx.fillStyle = color;
+  	canvas.cx.fill();
+  }
   canvas.cx.strokeStyle = color;
   canvas.cx.stroke();
 };
@@ -114,7 +124,7 @@ canvas.line = (color, alpha, x1, y1, x2, y2, w) => {
 
 //Fills entire canvas with specified color
 canvas.clear = (color) => {
-  canvas.rect(color, 1, canvas.w / 2, canvas.h / 2, canvas.w, canvas.h, 0, 0, 0);
+  canvas.rect(color, 1, canvas.w / 2, canvas.h / 2, canvas.w, canvas.h, 0, 0, 0, 1, true);
 };
 
 canvas.createSprite = (source, columns, rows, w, h) => {
