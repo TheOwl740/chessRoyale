@@ -36,6 +36,7 @@ function update() {
       white.deck[g].update(g);
     }
     placementUpdate();
+		controlUpdate();
   } else {
     updateMenu();
   }

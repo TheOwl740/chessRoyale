@@ -137,25 +137,28 @@ function placementUpdate() {
 function getSpace(x, y) {
 	for(a = 0; a < white.pieces.length; a++) {
 		if(convert(white.pieces[a].x) === x && convert(white.pieces[a].y) === y) {
-			return "WP"
+			return "WP";
 		}
 	}
 	for(a = 0; a < black.pieces.length; a++) {
 		if(convert(black.pieces[a].x) === x && convert(black.pieces[a].y) === y) {
-			return "BP"
+			return "BP";
 		}
 	}
 	for(a = 0; a < white.towers.length; a++) {
 		if(convert(white.towers[a].x) === x && convert(white.towers[a].y) === y) {
-			return "WT"
+			return "WT";
 		}
 	}
 	for(a = 0; a < black.towers.length; a++) {
 		if(convert(black.towers[a].x) === x && convert(black.towers[a].y) === y) {
-			return "BT"
+			return "BT";
 		}
 	}
-	return "OP"
+	if(x < 0 || x > ssc * 9 || y < 0 || y > ssc * 11) {
+		return "OB";
+	}
+	return "OP";
 }
 
 function convert(number) {
@@ -169,4 +172,71 @@ function backOpen() {
 		}
 	}
 	return true;
+}
+
+function controlUpdate() {
+	var permissible = [
+	];
+	if(selected !== null) {
+		switch(selected.type) {
+			case "000":
+				permissible.push({
+					x: selected.x - ssc,
+					y: selected.y - ssc,
+					w: ssc,
+					h: ssc
+				});
+				permissible.push({
+					x: selected.x + ssc,
+					y: selected.y - ssc,
+					w: ssc,
+					h: ssc
+				});
+				permissible.push({
+					x: selected.x,
+					y: selected.y - ssc,
+					w: ssc,
+					h: ssc
+				});
+				permissible.push({
+					x: selected.x,
+					y: selected.y - (ssc * 2),
+					w: ssc,
+					h: ssc
+				});
+				for(j = 0; j < permissible.length; j++) {
+					if(getSpace(permissible[j].x, permissible[j].y) === "WP" || getSpace(permissible[j].x, permissible[j].y) === "WT" || getSpace(permissible[j].x, permissible[j].y) === "OB" || getSpace(permissible[j].x, permissible[j].y) === "WA") {
+						permissible.splice(j, 1);
+					}
+				}
+				break;
+		}
+	}
+	for(j = 0; j < permissible.length; j++) {
+		canvas.arc("black", 0.69, permissible[j].x, permissible[j].y, ssc / 8, 0, 100, 1, true);
+	}
+	var unassign = true;
+	if(input.mouse.clicking) {
+		for(j = 0; j < white.pieces.length; j++) {
+			if(white.pieces[j].assigned && white.pieces[j].moveTimer === 0 && math.colliding(input.mouse.x, input.mouse.y, 1, 1, white.pieces[j].x, white.pieces[j].y, ssc, ssc)) {
+				selected = white.pieces[j];
+				unassign = false;
+				break;
+			}
+		}
+		if(selected !== null) {
+			for(j = 0; j < permissible.length; j++) {
+				if(math.colliding(input.mouse.x, input.mouse.y, 1, 1, permissible[j].x, permissible[j].y, ssc, ssc)) {
+					selected.x = permissible[j].x;
+					selected.y = permissible[j].y;
+					selected.moveTimer = 100;
+					selected = null;
+					unassign = false;
+				}
+			}
+		}
+		if(unassign) {
+			selected = null;
+		}
+	}
 }

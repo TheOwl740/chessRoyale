@@ -7,6 +7,7 @@ var difficulty = 1000;
 var selectedCard = 0;
 var bd = 0;
 var placing = null;
+var selected = null;
 
 var a;
 var b;
@@ -17,6 +18,7 @@ var f;
 var g;
 var h;
 var i;
+var j;
 
 var deck = [
 ];
@@ -165,7 +167,6 @@ class piece {
 			} else {
 				this.moveTimer = 0;
 			}
-			canvas.arc()
 		} else {
       if(this.color === "white") {
         if(input.getKey("ArrowLeft") && bd > 15) {
